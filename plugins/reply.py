@@ -1,7 +1,8 @@
 from typing import Optional
 from nonebot import on_command, CommandSession, on_notice
 from nonebot import on_natural_language, NLPSession, IntentCommand
-from nonebot.helpers import context_id, render_expression
+import os
+import time
 import jieba
 import MySQLdb
 db = MySQLdb.connect("localhost", "root", "Abcd520025@", "study", charset='utf8')
@@ -13,6 +14,9 @@ EXPR_DONT_UNDERSTAND = '您说什么我不明白！您可以美事扫工位二�
 async def reply(session: CommandSession):
     message = session.state.get('message')
     reply = await database_search(session, message)
+    msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
+        qq.write('{}{}{}'.format(msg_time + '\n', 'From:' + message, '\n' + 'To:' + reply + '\n'))
     await session.send(reply)
 
 
