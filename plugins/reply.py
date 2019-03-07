@@ -4,6 +4,7 @@ from nonebot import on_natural_language, NLPSession, IntentCommand
 import os
 import time
 import jieba
+jieba.load_userdict('dict.txt')
 import MySQLdb
 db = MySQLdb.connect("localhost", "root", "Abcd520025@", "study", charset='utf8')
 cursor = db.cursor()
@@ -32,9 +33,8 @@ async def database_search(session: CommandSession, msg: str)-> Optional[str]:
         t = True
         if a == ():
             seg_list = jieba.cut(msg, cut_all=True)
-            b = (i for i in seg_list)
             while t:
-                cursor.execute('select * from s1 where code LIKE "%{}%"' .format(next(b)))
+                cursor.execute('select * from s1 where code LIKE "%{}%"' .format(next(seg_list)))
                 a = cursor.fetchall()
                 text = a[0][1]
                 if a != ():
