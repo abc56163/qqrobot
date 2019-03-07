@@ -9,7 +9,7 @@ import MySQLdb
 db = MySQLdb.connect("localhost", "root", "Abcd520025@", "study", charset='utf8')
 cursor = db.cursor()
 
-EXPR_DONT_UNDERSTAND = '您说什么我不明白！您可以美事扫工位二维码提单哦！'
+EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 
 @on_command('reply')
 async def reply(session: CommandSession):
