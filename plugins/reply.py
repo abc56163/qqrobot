@@ -13,7 +13,7 @@ EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 
 @on_command('reply')
 async def reply(session: CommandSession):
-    message = session.state.get('message')
+    message = session.state.get('message').strip()
     reply = await database_search(session, message)
     msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
