@@ -7,9 +7,19 @@ import MySQLdb
 import jieba
 jieba.load_userdict(os.path.dirname(__file__)+'/dict.txt')
 
-
 db = MySQLdb.connect("localhost", "root", "Abcd520025@", "58dh", charset='utf8')
-cursor = db.cursor()
+
+# 保持mysql长连接
+def mysql_connection():
+    global db
+    try:
+        db.ping()
+    except:
+        db = MySQLdb.connect("localhost", "root", "Abcd520025@", "58dh", charset='utf8')
+    return db
+
+
+cursor = mysql_connection().cursor()
 
 EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 
@@ -17,7 +27,6 @@ EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 @on_command('reply')
 async def reply(session: CommandSession):
     message = session.state.get('message').replace(' ', '')
-    # print(message,1)
     if message in ('h电话', 'h电脑', 'h网络'):
         table = '58_robot_1'
         reply = await database_search(session, table, message)
@@ -29,10 +38,10 @@ async def reply(session: CommandSession):
     msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
         qq.write('{}{}{}'.format(msg_time + '\n', 'From:' + message, '\n' + 'To:' + reply + '\n'))
-    if reply == EXPR_DONT_UNDERSTAND:
-        pass
-    else:
-        await session.send(reply+'\n'+des)
+    # if reply == EXPR_DONT_UNDERSTAND:
+    #     pass
+    # else:
+    #     await session.send(reply+'\n'+des)
 
 
 
