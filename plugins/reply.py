@@ -22,7 +22,6 @@ def mysql_connection(db):
 
 
 EXPR_DONT_UNDERSTAND = '未匹配到关键词'
-answer2 = '您说的我不明白，您可以输入下列关键词：/电话,/电脑,/网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"'
 supplement = "\n\n更多解决方案可以输入下列关键词：/电话,/电脑,/网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"
 
 
@@ -36,10 +35,7 @@ async def reply(session: CommandSession):
     else:
         table = '58_robot_2'
         answer = await database_search(session, table, message)
-        if answer == answer2:
-            des = ''
-        else:
-            des = supplement
+        des = supplement
     # if answer == EXPR_DONT_UNDERSTAND:
     #     pass
     # else:
