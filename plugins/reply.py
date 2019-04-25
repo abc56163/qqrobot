@@ -5,7 +5,8 @@ import os
 import time
 import MySQLdb
 import jieba
-jieba.load_userdict(os.path.dirname(__file__)+'/dict.txt')
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+jieba.load_userdict(base_dir+'/dict.txt')
 
 
 # 保持mysql长连接
@@ -28,14 +29,14 @@ EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 @on_command('reply')
 async def reply(session: CommandSession):
     message = session.state.get('message').replace(' ', '')
-    if message in ('h电话', 'h电脑', 'h网络'):
+    if message in ('/电话', '/电脑', '/网络'):
         table = '58_robot_1'
         reply = await database_search(session, table, message)
         des = ''
     else:
         table = '58_robot_2'
         reply = await database_search(session, table, message)
-        des = "\n\n更对解决方案可以输入下列关键词：h电话,h电脑,h网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"
+        des = "\n\n更对解决方案可以输入下列关键词：/电话,/电脑,/网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"
     # if reply == EXPR_DONT_UNDERSTAND:
     #     pass
     # else:
@@ -53,7 +54,6 @@ async def reply(session: CommandSession):
     # 聊天记录写入文件
     # with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
     #     qq.write('{}{}{}'.format(msg_time + '\n', 'From:' + message, '\n' + 'To:' + reply + '\n'))
-
 
 
 
