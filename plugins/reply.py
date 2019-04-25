@@ -40,7 +40,7 @@ async def reply(session: CommandSession):
             des = ''
         else:
             des = supplement
-    # if reply == EXPR_DONT_UNDERSTAND:
+    # if answer == EXPR_DONT_UNDERSTAND:
     #     pass
     # else:
     #     await session.send(answer+'\n'+des)
