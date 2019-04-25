@@ -36,7 +36,7 @@ async def reply(session: CommandSession):
     else:
         table = '58_robot_2'
         reply = await database_search(session, table, message)
-        des = "\n\n更对解决方案可以输入下列关键词：/电话,/电脑,/网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"
+        des = "\n\n更多解决方案可以输入下列关键词：/电话,/电脑,/网络来获取更多帮助\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT"
     # if reply == EXPR_DONT_UNDERSTAND:
     #     pass
     # else:
