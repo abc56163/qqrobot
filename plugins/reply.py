@@ -2,9 +2,12 @@ from typing import Optional
 from nonebot import on_command, CommandSession
 from nonebot import on_natural_language, NLPSession, IntentCommand
 import os
+import sys
 import time
 import jieba
+sys.path.append('..')
 from imrobot.db_connect import mysql_connection, dbc
+
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 jieba.load_userdict(base_dir+'/dict.txt')
@@ -32,37 +35,40 @@ async def reply(session: CommandSession):
     if message in ('电话问题', '电脑问题', '网络问题'):
         table = '58_robot_1'
         answer = await database_search(session, table, message)
-        des = ''
-    elif 'add' in message:
+    elif 'add-' in message:
         key = message.split('-')[1]
-        with open(base_dir+'/dict.txt', 'a') as k:
-            k.write(key + ' ' + '10' + '\n')
-        jieba.add_word(key)
-        answer = '关键词已经添加'
-    elif 'del' in message:
+        if key != '':
+            with open(base_dir+'/dict.txt', 'a') as k:
+                k.write(key + ' ' + '10' + '\n')
+            jieba.add_word(key)
+            answer = '关键词已经激活'
+        else:
+            answer = '请按照此格式激活:add-关键词'
+    elif 'del-' in message:
         dict_txt = []
         key = message.split('-')[1]
-        fp = open(base_dir+'/dict.txt', 'r')
-        txt = fp.readlines()
-        for i in txt:
-            if key in i:
-                jieba.del_word(key)
-            else:
-                dict_txt.append(i)
-        fp.close()
+        if key != '':
+            fp = open(base_dir+'/dict.txt', 'r')
+            txt = fp.readlines()
+            for i in txt:
+                if key in i:
+                    jieba.del_word(key)
+                else:
+                    dict_txt.append(i)
+            fp.close()
 
-        with open(base_dir+'/dict.txt', 'w+') as fp:
-            for i in dict_txt:
-                fp.write(i)
-        answer = '关键词已经删除'
+            with open(base_dir+'/dict.txt', 'w+') as fp:
+                for i in dict_txt:
+                    fp.write(i)
+            answer = '关键词已经删除'
+        else:
+            answer = '请按照此格式删除:del-关键词'
     else:
         table = '58_robot_2'
         des = supplement
         answer = await database_search(session, table, message) + '\n'+des
 
-    if EXPR_DONT_UNDERSTAND in answer:
-        pass
-    else:
+    if EXPR_DONT_UNDERSTAND not in answer:
         print(answer)
         await session.send(answer)
         msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -76,10 +82,10 @@ async def reply(session: CommandSession):
             db.rollback()
 
 
+
     # 聊天记录写入文件
     # with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
     #     qq.write('{}{}{}'.format(msg_time + '\n', 'From:' + message, '\n' + 'To:' + reply + '\n'))
-
 
 @on_natural_language(only_to_me=False)
 async def _(session: NLPSession):
