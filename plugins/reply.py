@@ -5,12 +5,13 @@ import os
 import sys
 import time
 import jieba
-sys.path.append('..')
+sys.path.append('../..')
 from imrobot.db_connect import mysql_connection, dbc
 
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-jieba.load_userdict(base_dir+'/dict.txt')
+# jieba.load_userdict(base_dir+'/dict.txt')
+jieba.set_dictionary(base_dir+'/dict.txt')
 db = dbc()
 
 # 保持mysql长连接
@@ -36,7 +37,7 @@ async def reply(session: CommandSession):
         table = '58_robot_1'
         answer = await database_search(session, table, message)
     elif 'add-' in message:
-        key = message.split('-')[1]
+        key = message.split('-')[1]：
         if key != '':
             with open(base_dir+'/dict.txt', 'a') as k:
                 k.write(key + ' ' + '10' + '\n')
