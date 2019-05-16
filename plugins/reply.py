@@ -5,14 +5,14 @@ import os
 import sys
 import time
 import jieba
-sys.path.append('../..')
-from imrobot.db_connect import mysql_connection, dbc
+sys.path.append('../')
+from config import databases
 
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # jieba.load_userdict(base_dir+'/dict.txt')
 jieba.set_dictionary(base_dir+'/dict.txt')
-db = dbc()
+
 
 # 保持mysql长连接
 # db = MySQLdb.connect("localhost", "root", "Abcd520025@", "58dh", charset='utf8')
@@ -28,6 +28,8 @@ db = dbc()
 
 EXPR_DONT_UNDERSTAND = '未匹配到关键词'
 supplement = "\n更多解决方案可以输入下列关键词:电话问题,电脑问题,网络问题来获取更多帮助!\n您也可以直接美式扫工位二维码或online在线提单来快速联系IT!"
+cursor = databases().cursor()
+db = databases()
 
 
 @on_command('reply')
@@ -37,7 +39,7 @@ async def reply(session: CommandSession):
         table = '58_robot_1'
         answer = await database_search(session, table, message)
     elif 'add-' in message:
-        key = message.split('-')[1]：
+        key = message.split('-')[1]
         if key != '':
             with open(base_dir+'/dict.txt', 'a') as k:
                 k.write(key + ' ' + '10' + '\n')
@@ -74,7 +76,7 @@ async def reply(session: CommandSession):
         await session.send(answer)
         msg_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 聊天记录写入数据库
-        cursor = mysql_connection(db).cursor()
+
         try:
             cursor.execute('insert into 58_robot_3 (im, time, question, answer) values ("QQ", "{}", "{}", "{}")'
                            .format(msg_time, message, answer))
@@ -82,11 +84,10 @@ async def reply(session: CommandSession):
         except:
             db.rollback()
 
-
-
     # 聊天记录写入文件
-    # with open(os.path.dirname(__file__)+'/'+'QQ_msg_log.txt', 'a') as qq:
+    # with open(os.path.dirname(__file__)+'/'+'QQ_msg_log1.txt', 'a') as qq:
     #     qq.write('{}{}{}'.format(msg_time + '\n', 'From:' + message, '\n' + 'To:' + reply + '\n'))
+
 
 @on_natural_language(only_to_me=False)
 async def _(session: NLPSession):
@@ -94,7 +95,6 @@ async def _(session: NLPSession):
 
 
 async def database_search(session: CommandSession, table,msg: str)-> Optional[str]:
-    cursor = mysql_connection(db).cursor()
     cursor.execute('select * from {} where keyword LIKE "{}";'.format(table, msg))
     a = cursor.fetchone()
     if a is not None:
