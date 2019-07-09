@@ -9,7 +9,7 @@ COMMAND_START = {'', '/', '!', '/-', '！'}  # exclude these opening characters 
 
 
 def base():
-    db = MySQLdb.connect("10.245.0.224", "root", "58ganji@123", "58dh", charset='utf8')
+    db = MySQLdb.connect("******", "******", "******", "******", charset='utf8')
     return db
 
 
@@ -18,5 +18,5 @@ def databases():
     try:
         db.ping()
     except:
-        db = MySQLdb.connect("10.245.0.224", "root", "58ganji@123", "58dh", charset='utf8')
+        db = MySQLdb.connect("******", "root", "******", "******", charset='utf8')
     return db
