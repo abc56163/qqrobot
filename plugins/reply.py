@@ -15,14 +15,14 @@ jieba.set_dictionary(base_dir+'/dict.txt')
 
 
 # 保持mysql长连接
-# db = MySQLdb.connect("localhost", "root", "Abcd520025@", "58dh", charset='utf8')
+# db = MySQLdb.connect("localhost", "root", "*********", "58dh", charset='utf8')
 #
 #
 # def mysql_connection(db):
 #     try:
 #         db.ping()
 #     except:
-#         db = MySQLdb.connect("localhost", "root", "Abcd520025@", "58dh", charset='utf8')
+#         db = MySQLdb.connect("localhost", "root", "*********", "58dh", charset='utf8')
 #     return db
 
 
